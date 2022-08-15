@@ -53,11 +53,14 @@ class EditProfileForm(FlaskForm):
                 raise ValidationError('This email is already used.')
 
 class PostForm(FlaskForm):
-    post = StringField(
-        'Say something:', 
-        validators=[
-            DataRequired(),
-            Length(min=1, max=140)
-        ]
-    )
+    post = StringField('Say something:', validators=[DataRequired(), Length(min=1, max=140)])
     submit = SubmitField('Submit')
+
+class ResetPasswordRequestForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    submit = SubmitField('Request password reset')
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('New password', validators=[DataRequired()])
+    password_repeated = PasswordField('Repeat password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Request password reset')
