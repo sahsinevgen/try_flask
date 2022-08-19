@@ -1,4 +1,3 @@
-from crypt import methods
 from datetime import datetime
 from app import app, db
 from flask import render_template, flash, redirect, request, url_for
@@ -7,11 +6,13 @@ from app.forms import EditProfileForm, LoginForm, RegistrationForm, EmptyForm, P
 from app.models import User, Post
 from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.urls import url_parse
+from flask_babel import _, lazy_gettext as _l
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
+    flash(_('Hello, world!!!'))
     form = PostForm()
     if form.validate_on_submit():
         post = Post(body=form.post.data, author=current_user)
@@ -155,16 +156,6 @@ def unfollow(username):
     else:
         return redirect(url_for('index'))
 
-@app.before_request
-def before_request():
-    if current_user.is_authenticated:
-        print(current_user.last_seen)
-        current_user.last_seen = datetime.utcnow()
-        print(current_user.last_seen)
-        db.session.commit()
-
-
-
 @app.route('/explore')
 @login_required
 def explore():
@@ -214,3 +205,9 @@ def reset_password(token):
         flash('Your password has been changed')
         return redirect(url_for('index'))
     return render_template('reset_password.html', form=form)
+
+@app.before_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.last_seen = datetime.utcnow()
+        db.session.commit()

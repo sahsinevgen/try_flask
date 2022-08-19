@@ -22,4 +22,8 @@ class Config(object):
     # MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     ADMINS = ['sasha@sarfsc.ru']
 
+    LANGUAGES = ['en', 'es', 'ru']
+    BABEL_TRANSLATION_DIRECTORIES = os.path.join(os.path.abspath(os.path.dirname(__file__)), "app/translations")
+    BABEL_DEFAULT_LOCALE = 'en'
+
     POSTS_PER_PAGE = 25
